@@ -1,0 +1,16 @@
+Tree(
+    Error {
+        context: "mishap2 line1\nmishap2 line2",
+        sources: [
+            Chain(
+                Error {
+                    context: "mishap1 line1\nmishap1 line2",
+                    source: Error {
+                        context: "anyhow error2",
+                        source: "anyhow error",
+                    },
+                },
+            ),
+        ],
+    },
+)

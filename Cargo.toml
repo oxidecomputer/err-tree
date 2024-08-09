@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/*",
+]
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.75"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+anyhow = "1.0.86"
+err-tree = { path = "crates/err-tree" }
+expectorate = "1.1.0"
+indent_write = "2.2.0"

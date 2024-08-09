@@ -1,0 +1,13 @@
+[package]
+name = "err-tree"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow = { version = "1.0.86", optional = true }
+indent_write = "2.2.0"
+
+[features]
+anyhow-compat = ["dep:anyhow"]

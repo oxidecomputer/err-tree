@@ -1,0 +1,21 @@
+mishap8 line1
+mishap8 line2
+
+Caused by:
+
+  + mishap5 line1
+    mishap5 line2
+    - parent
+      + mishap2 line1
+
+        mishap2 line 2
+        - mishap1 line1
+          mishap1 line2
+        - anyhow error2
+        - anyhow error
+      + mishap3 line1
+        mishap3 line2
+  + mishap7 line1
+    mishap7 line2
+    - mishap6 line1
+      mishap6 line2
