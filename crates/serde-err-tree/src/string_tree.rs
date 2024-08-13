@@ -40,6 +40,8 @@ impl StringErrorTree {
 
     /// Creates a new string error tree from an error.
     pub fn from_error<E: std::error::Error>(error: E) -> Self {
+        // Can't use `err_tree::ErrorWrapper` here because that requires the error to be
+        // `Send + Sync`.
         let source = error.source().map(Self::from_error);
         Self::from_msg_and_sources(error.to_string(), source.into_iter().collect())
     }
