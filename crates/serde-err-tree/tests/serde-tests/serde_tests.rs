@@ -1,6 +1,6 @@
 use mishap::Mishap;
 use pretty_assertions::assert_eq;
-use serde_err_tree::{Ser, StringErrorTree};
+use serde_err_tree::{Ser, SerdeErrorTree};
 
 #[test]
 fn test_complex() {
@@ -21,15 +21,15 @@ fn test_impl(mishap: Mishap, filename_prefix: &str) {
     );
 
     // Try roundtripping to `StringErrorTree` and back.
-    let tree: StringErrorTree = serde_json::from_str(&json).unwrap();
+    let tree: SerdeErrorTree = serde_json::from_str(&json).unwrap();
     let ser = Ser::new(&tree);
     let string_json = serde_json::to_string_pretty(&ser).unwrap();
     assert_eq!(json, string_json);
 
-    let tree2: StringErrorTree = serde_json::from_str(&string_json).unwrap();
+    let tree2: SerdeErrorTree = serde_json::from_str(&string_json).unwrap();
     assert_eq!(tree, tree2, "trees match after roundtrip");
 
-    // Try constructing a string error tree directly from the mishap.
-    let tree3 = StringErrorTree::new(&mishap);
+    // Try constructing a serde tree directly from the mishap.
+    let tree3 = SerdeErrorTree::new(&mishap);
     assert_eq!(tree, tree3, "trees match when constructed directly");
 }

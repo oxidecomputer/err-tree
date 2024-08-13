@@ -5,6 +5,8 @@ use serde::{
 };
 
 /// A wrapper which implements [`Serialize`] for arbitrary error trees.
+///
+/// For a way to deserialize this format, see [`SerdeErrorTree`](crate::SerdeErrorTree).
 pub struct Ser<ET> {
     et: ET,
 }
