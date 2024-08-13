@@ -4,5 +4,7 @@
 //! This crate provides a way to do that using serde.
 
 mod adapter;
+mod string_tree;
 
 pub use adapter::*;
+pub use string_tree::*;

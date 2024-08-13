@@ -4,7 +4,7 @@ use serde::{
     Serialize, Serializer,
 };
 
-/// A wrapper type which implements [`Serialize`] for arbitrary error trees.
+/// A wrapper which implements [`Serialize`] for arbitrary error trees.
 pub struct Ser<ET> {
     et: ET,
 }

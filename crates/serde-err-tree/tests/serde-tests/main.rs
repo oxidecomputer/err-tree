@@ -1,1 +1,1 @@
-mod ser;
+mod serde_tests;
