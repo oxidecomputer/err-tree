@@ -16,3 +16,5 @@ expectorate = "1.1.0"
 mishap = { path = "crates/mishap" }
 mishap-testdata = { path = "crates/mishap-testdata" }
 indent_write = "2.2.0"
+serde = { version = "1.0.207", features = ["derive"] }
+serde_json = "1.0.124"

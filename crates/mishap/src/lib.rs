@@ -1,3 +1,34 @@
+//! **Mishap** is a trait object-based library for dynamically handling [`err_tree::ErrorTree`]
+//! instances.
+//!
+//! Think of it as the equivalent to [`anyhow`] for `ErrorTree` instances.
+//!
+//! # Details
+//!
+//! Use `Result<T, mishap::Mishap>`, or equivalently `mishap::Result<T>`, as the return type of
+//! functions that may produce error trees.
+//!
+//! Note that unlike [`anyhow::Error`], [`Mishap`] does not implement `From` for arbitrary error
+//! trees or errors. Instead, you must call one of the `wrap_` methods to convert one or more errors
+//! or error trees into a `Mishap`.
+//!
+//! ```
+//! use mishap::{Result, WrapError};
+//!
+//! # #[derive(serde::Deserialize)]
+//! # struct BookList;
+//!
+//! fn get_book_list() -> Result<BookList> {
+//!      let json = std::fs::read_to_string("book-list.json")
+//!         .wrap_error("failed to read file")?;
+//!      let list: BookList = serde_json::from_str(&json)
+//!         .wrap_error("failed to parse JSON")?;
+//!      Ok(list)
+//! }
+//! ```
+//!
+//! TODO: continue this documentation.
+
 mod mishap;
 mod wrapped;
 
