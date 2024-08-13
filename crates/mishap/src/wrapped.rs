@@ -15,6 +15,11 @@ pub trait WrapErrorTree<T, E>: private::Sealed {
     where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D;
+
+    /// Convert the error tree into a [`Mishap`] without attaching another message.
+    ///
+    /// This is equivalent to `From<E: ErrorTree> for Mishap`.
+    fn wrap_error_tree_relay(self) -> Result<T, Mishap>;
 }
 
 /// Extension trait for wrapping lists or other iterators of error trees with ad-hoc messages.
@@ -45,6 +50,11 @@ pub trait WrapError<T, E>: private::Sealed {
     where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D;
+
+    /// Convert the error value into a [`Mishap`] without attaching another message.
+    ///
+    /// This is equivalent to `From<E: Error> for Mishap`.
+    fn wrap_error_relay(self) -> Result<T, Mishap>;
 }
 
 /// Extension trait for wrapping lists or other iterators of errors with ad-hoc messages.
@@ -92,58 +102,15 @@ pub trait WrapAnyhows<T>: private::Sealed {
         F: FnOnce() -> D;
 }
 
-mod ext {
-    use super::*;
-
-    pub(crate) trait StdError {
-        #[track_caller]
-        fn ext_mishap<D>(self, msg: D) -> Mishap
-        where
-            D: fmt::Display + Send + Sync + 'static;
-    }
-
-    impl<E> StdError for E
-    where
-        E: std::error::Error + Send + Sync + 'static,
-    {
-        fn ext_mishap<D>(self, msg: D) -> Mishap
-        where
-            D: fmt::Display + Send + Sync + 'static,
-        {
-            Mishap::from_error_and_msg(msg, self)
-        }
-    }
-
-    pub(crate) trait StdErrorList {
-        #[track_caller]
-        fn ext_mishap_list<D>(self, msg: D) -> Mishap
-        where
-            D: fmt::Display + Send + Sync + 'static;
-    }
-
-    impl<I, E> StdErrorList for I
-    where
-        I: IntoIterator<Item = E>,
-        E: std::error::Error + Send + Sync + 'static,
-    {
-        fn ext_mishap_list<D>(self, msg: D) -> Mishap
-        where
-            D: fmt::Display + Send + Sync + 'static,
-        {
-            Mishap::from_errors_and_msg(msg, self)
-        }
-    }
-}
-
 impl<T, E> WrapError<T, E> for Result<T, E>
 where
-    E: ext::StdError,
+    E: std::error::Error + Send + Sync + 'static,
 {
     fn wrap_error<D>(self, msg: D) -> Result<T, Mishap>
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|error| error.ext_mishap(msg))
+        self.map_err(|error| Mishap::from_error_and_msg(msg, error))
     }
 
     fn wrap_error_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -151,19 +118,24 @@ where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|error| error.ext_mishap(f()))
+        self.map_err(|error| Mishap::from_error_and_msg(f(), error))
+    }
+
+    fn wrap_error_relay(self) -> Result<T, Mishap> {
+        self.map_err(Mishap::from_error)
     }
 }
 
-impl<T, E> WrapErrors<T, E> for Result<T, E>
+impl<T, I, E> WrapErrors<T, I> for Result<T, I>
 where
-    E: ext::StdErrorList,
+    I: IntoIterator<Item = E>,
+    E: std::error::Error + Send + Sync + 'static,
 {
     fn wrap_errors<D>(self, msg: D) -> Result<T, Mishap>
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|error| error.ext_mishap_list(msg))
+        self.map_err(|sources| Mishap::from_errors_and_msg(msg, sources))
     }
 
     fn wrap_errors_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -171,7 +143,7 @@ where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|error| error.ext_mishap_list(f()))
+        self.map_err(|sources| Mishap::from_errors_and_msg(f(), sources))
     }
 }
 
@@ -192,6 +164,10 @@ where
         F: FnOnce() -> D,
     {
         self.map_err(|error| Mishap::from_error_tree_and_msg(f(), error))
+    }
+
+    fn wrap_error_tree_relay(self) -> Result<T, Mishap> {
+        self.map_err(Mishap::from_error_tree)
     }
 }
 
