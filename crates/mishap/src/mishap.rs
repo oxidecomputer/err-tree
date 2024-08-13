@@ -172,7 +172,7 @@ impl Mishap {
         }
     }
 
-    pub fn wrap_single<D>(self, msg: D) -> Self
+    pub fn wrap_mishap<D>(self, msg: D) -> Self
     where
         D: fmt::Display + Send + Sync + 'static,
     {
@@ -228,7 +228,7 @@ impl TreeImpl {
     }
 
     fn new_tree(tree: impl ErrorTree + 'static) -> Box<Self> {
-        Box::new(TreeImpl::Tree(Box::new(tree)))
+        Box::new(TreeImpl::Tree(tree.into_boxed()))
     }
 
     fn new_wrapped_tree<D, ET>(msg: D, sources: impl IntoIterator<Item = ET>) -> Box<Self>
@@ -238,7 +238,7 @@ impl TreeImpl {
     {
         let sources: Box<[_]> = sources.into_iter().collect();
         if sources.is_empty() {
-            // No sources can be simplified to an anyhow error.
+            // If there are no sources, this can be simplified to an anyhow error.
             return TreeImpl::new_chain(anyhow!(msg.to_string()));
         }
         Box::new(TreeImpl::Tree(Box::new(WrappedTree::new(msg, sources))))

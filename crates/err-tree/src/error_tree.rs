@@ -23,15 +23,41 @@ pub trait ErrorTree: fmt::Debug + fmt::Display + Send + Sync {
     /// This is similar to [`std::error::Error::source`], except it returns an
     /// iterator of all the causes, rather than just one.
     fn sources(&self) -> Box<dyn Iterator<Item = ErrorTreeSource<'_>> + '_>;
+
+    /// Converts the error tree into a boxed trait object.
+    fn into_boxed(self) -> Box<dyn ErrorTree>
+    where
+        Self: Sized + 'static,
+    {
+        Box::new(self)
+    }
 }
 
 impl<T> ErrorTree for Box<T>
 where
-    T: ErrorTree + ?Sized,
+    T: ErrorTree,
 {
     #[inline]
     fn sources(&self) -> Box<dyn Iterator<Item = ErrorTreeSource<'_>> + '_> {
         (**self).sources()
+    }
+
+    fn into_boxed(self) -> Box<dyn ErrorTree>
+    where
+        T: 'static,
+    {
+        self
+    }
+}
+
+impl ErrorTree for Box<dyn ErrorTree> {
+    #[inline]
+    fn sources(&self) -> Box<dyn Iterator<Item = ErrorTreeSource<'_>> + '_> {
+        (**self).sources()
+    }
+
+    fn into_boxed(self) -> Box<dyn ErrorTree> {
+        self
     }
 }
 
