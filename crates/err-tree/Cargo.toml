@@ -6,8 +6,8 @@ rust-version.workspace = true
 license.workspace = true
 
 [dependencies]
-anyhow = { version = "1.0.86", optional = true }
-indent_write = "2.2.0"
+anyhow = { workspace = true, optional = true }
+indent_write.workspace = true
 
 [features]
 anyhow-compat = ["dep:anyhow"]

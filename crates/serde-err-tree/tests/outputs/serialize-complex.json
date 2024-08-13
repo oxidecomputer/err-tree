@@ -1,0 +1,60 @@
+{
+  "msg": "top-level line1\ntop-level line2",
+  "sources": [
+    {
+      "msg": "mishap5 line1\nmishap5 line2",
+      "sources": [
+        {
+          "msg": "mishap4",
+          "sources": [
+            {
+              "msg": "mishap2 line1\n\nmishap2 line 2",
+              "sources": [
+                {
+                  "msg": "mishap1 line1\nmishap1 line2",
+                  "sources": [
+                    {
+                      "msg": "anyhow error2",
+                      "sources": [
+                        {
+                          "msg": "anyhow error",
+                          "sources": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "msg": "mishap3 line1\nmishap3 line2",
+              "sources": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "msg": "mishap7 line1\nmishap7 line2",
+      "sources": [
+        {
+          "msg": "mishap6 line1\nmishap6 line2",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "msg": "mishap8 line1\nmishap8 line2",
+      "sources": [
+        {
+          "msg": "anyhow error3",
+          "sources": []
+        },
+        {
+          "msg": "anyhow error4",
+          "sources": []
+        }
+      ]
+    }
+  ]
+}

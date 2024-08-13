@@ -5,7 +5,7 @@ Mishap {
             msg: "mishap5 line1\nmishap5 line2",
             sources: [
                 Mishap {
-                    msg: "parent",
+                    msg: "mishap4",
                     sources: [
                         Mishap {
                             msg: "mishap2 line1\n\nmishap2 line 2",

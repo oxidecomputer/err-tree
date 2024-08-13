@@ -10,7 +10,7 @@ pub fn complex() -> Mishap {
     let mishap2 = Mishap::from_error_tree_and_msg("mishap2 line1\n\nmishap2 line 2", mishap1);
 
     let mishap3 = Mishap::from_msg("mishap3 line1\nmishap3 line2");
-    let mishap4 = Mishap::from_error_trees_and_msg("parent", [mishap2, mishap3]);
+    let mishap4 = Mishap::from_error_trees_and_msg("mishap4", [mishap2, mishap3]);
     let mishap5 = Mishap::from_error_tree_and_msg("mishap5 line1\nmishap5 line2", mishap4);
 
     let mishap6 = Mishap::from_msg("mishap6 line1\nmishap6 line2");

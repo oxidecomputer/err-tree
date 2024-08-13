@@ -139,6 +139,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde-err-tree"
+version = "0.1.0"
+dependencies = [
+ "err-tree",
+ "expectorate",
+ "mishap-testdata",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "serde_derive"
 version = "1.0.207"
 source = "registry+https://github.com/rust-lang/crates.io-index"

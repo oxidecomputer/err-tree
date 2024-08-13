@@ -5,7 +5,7 @@ Caused by:
 
     + mishap5 line1
       mishap5 line2
-        - parent
+        - mishap4
             + mishap2 line1
 
               mishap2 line 2
