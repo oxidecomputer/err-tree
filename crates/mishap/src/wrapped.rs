@@ -260,11 +260,8 @@ pub(crate) struct WrappedTree<D, E> {
 }
 
 impl<D, E> WrappedTree<D, E> {
-    pub(crate) fn new(msg: D, sources: impl IntoIterator<Item = E>) -> Self {
-        Self {
-            msg,
-            sources: sources.into_iter().collect(),
-        }
+    pub(crate) fn new(msg: D, sources: Box<[E]>) -> Self {
+        Self { msg, sources }
     }
 }
 
