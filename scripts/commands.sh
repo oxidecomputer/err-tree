@@ -41,8 +41,8 @@ run_doctest() {
 
 run_coverage() {
     echo_err "Running coverage (requires nightly)"
-    run_cargo_std llvm-cov nextest --all-features --all-targets --lcov --output-path lcov.info
-    run_cargo_std llvm-cov test --all-features --doc --lcov --output-path lcov-doctest.info
+    run_cargo llvm-cov nextest --all-features --all-targets --lcov --output-path lcov.info
+    run_cargo llvm-cov test --all-features --doc --lcov --output-path lcov-doctest.info
     echo_err "Wrote output to lcov.info and lcov-doctest.info"
 }
 
@@ -66,8 +66,8 @@ run_cargo_hack() {
     $CARGO hack --feature-powerset --exclude-features "$joined_excluded_features" "$@"
 }
 
-run_cargo_std() {
-    $CARGO "$@" --features std
+run_cargo() {
+    $CARGO "$@"
 }
 
 if [[ $# -eq 0 ]]; then
