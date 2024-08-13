@@ -27,8 +27,8 @@ impl<ET: ErrorTree> Serialize for Ser<ET> {
         // Walk the tree and its sources.
 
         let mut map = serializer.serialize_struct("ErrorTree", 2)?;
-        map.serialize_field(&"msg", &self.et.to_string())?;
-        map.serialize_field(&"sources", &SerSources { tree: &self.et })?;
+        map.serialize_field("msg", &self.et.to_string())?;
+        map.serialize_field("sources", &SerSources { tree: &self.et })?;
 
         map.end()
     }
@@ -86,7 +86,7 @@ impl<'a> Serialize for SerError<'a> {
     {
         // Use the same serialization format as error trees with one source.
         let mut map = serializer.serialize_struct("ErrorTree", 2)?;
-        map.serialize_field(&"msg", &self.error.to_string())?;
+        map.serialize_field("msg", &self.error.to_string())?;
         map.serialize_field(
             "sources",
             &SerErrorSources {
