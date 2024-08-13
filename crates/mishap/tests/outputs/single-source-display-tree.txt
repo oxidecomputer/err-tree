@@ -3,7 +3,8 @@ mishap2 line2
 
 Caused by:
 
-  - mishap1 line1
-    mishap1 line2
-  - anyhow error2
-  - anyhow error
+    - mishap1 line1
+      mishap1 line2
+    - anyhow error3
+    - anyhow error2
+    - anyhow error

@@ -108,14 +108,14 @@ fn display_nested_tree(
     tree: &dyn ErrorTree,
     parent_kind: DisplayKind,
 ) -> fmt::Result {
-    let mut indent = IndentWriter::new_skip_initial("  ", f);
+    let mut indent = IndentWriter::new_skip_initial("    ", f);
     match parent_kind {
         DisplayKind::Single => {
-            writeln!(indent, "- {}", tree)?;
+            writeln!(indent, "  - {}", tree)?;
             f = indent.into_inner();
         }
         DisplayKind::Multi => {
-            writeln!(indent, "+ {}", tree)?;
+            writeln!(indent, "  + {}", tree)?;
             f = indent.into_inner();
         }
     }
@@ -137,14 +137,14 @@ fn display_nested_tree(
             }
             DisplayKind::Multi => {
                 // Multi -> single displays need to add an extra indent.
-                let mut indent = IndentWriter::new("  ", f);
+                let mut indent = IndentWriter::new("    ", f);
                 display_nested_source(&mut indent, first_source, DisplayKind::Single)?;
             }
         }
     } else {
         // * With more than one source, we need to display it as a tree -- this
         //   always adds extra indentation.
-        let mut indent = IndentWriter::new("  ", f);
+        let mut indent = IndentWriter::new("    ", f);
         display_nested_source(&mut indent, first_source, DisplayKind::Multi)?;
         for source in sources {
             display_nested_source(&mut indent, source, DisplayKind::Multi)?;
@@ -161,30 +161,30 @@ fn display_nested_error(
 ) -> fmt::Result {
     match parent_kind {
         DisplayKind::Single => {
-            let mut indent = IndentWriter::new_skip_initial("  ", f);
-            writeln!(indent, "- {}", error)?;
+            let mut indent = IndentWriter::new_skip_initial("    ", f);
+            writeln!(indent, "  - {}", error)?;
             f = indent.into_inner();
 
             let mut next = error.source();
 
             while let Some(source) = next {
-                let mut indent = IndentWriter::new_skip_initial("  ", f);
-                writeln!(indent, "- {}", source)?;
+                let mut indent = IndentWriter::new_skip_initial("    ", f);
+                writeln!(indent, "  - {}", source)?;
                 next = source.source();
                 f = indent.into_inner();
             }
         }
         DisplayKind::Multi => {
-            let mut indent = IndentWriter::new_skip_initial("  ", f);
-            writeln!(indent, "+ {}", error)?;
+            let mut indent = IndentWriter::new_skip_initial("    ", f);
+            writeln!(indent, "  + {}", error)?;
             f = indent.into_inner();
 
             let mut next = error.source();
 
             while let Some(source) = next {
                 // Add an extra indent to show that this is nested.
-                let mut indent = IndentWriter::new_skip_initial("    ", f);
-                writeln!(indent, "  - {}", source)?;
+                let mut indent = IndentWriter::new_skip_initial("        ", f);
+                writeln!(indent, "      - {}", source)?;
                 next = source.source();
                 f = indent.into_inner();
             }

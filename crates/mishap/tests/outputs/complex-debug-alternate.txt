@@ -1,50 +1,41 @@
-Tree(
-    Error {
-        context: "mishap8 line1\nmishap8 line2",
-        sources: [
-            Tree(
-                Error {
-                    context: "mishap5 line1\nmishap5 line2",
+Mishap {
+    msg: "top-level line1\ntop-level line2",
+    sources: [
+        Mishap {
+            msg: "mishap5 line1\nmishap5 line2",
+            sources: [
+                Mishap {
+                    msg: "parent",
                     sources: [
-                        Tree(
-                            Error {
-                                context: "parent",
-                                sources: [
-                                    Tree(
-                                        Error {
-                                            context: "mishap2 line1\n\nmishap2 line 2",
-                                            sources: [
-                                                Chain(
-                                                    Error {
-                                                        context: "mishap1 line1\nmishap1 line2",
-                                                        source: Error {
-                                                            context: "anyhow error2",
-                                                            source: "anyhow error",
-                                                        },
-                                                    },
-                                                ),
-                                            ],
-                                        },
-                                    ),
-                                    Chain(
-                                        "mishap3 line1\nmishap3 line2",
-                                    ),
-                                ],
-                            },
-                        ),
+                        Mishap {
+                            msg: "mishap2 line1\n\nmishap2 line 2",
+                            sources: [
+                                Error {
+                                    context: "mishap1 line1\nmishap1 line2",
+                                    source: Error {
+                                        context: "anyhow error2",
+                                        source: "anyhow error",
+                                    },
+                                },
+                            ],
+                        },
+                        "mishap3 line1\nmishap3 line2",
                     ],
                 },
-            ),
-            Tree(
-                Error {
-                    context: "mishap7 line1\nmishap7 line2",
-                    sources: [
-                        Chain(
-                            "mishap6 line1\nmishap6 line2",
-                        ),
-                    ],
-                },
-            ),
-        ],
-    },
-)
+            ],
+        },
+        Mishap {
+            msg: "mishap7 line1\nmishap7 line2",
+            sources: [
+                "mishap6 line1\nmishap6 line2",
+            ],
+        },
+        Mishap {
+            msg: "mishap8 line1\nmishap8 line2",
+            sources: [
+                "anyhow error3",
+                "anyhow error4",
+            ],
+        },
+    ],
+}

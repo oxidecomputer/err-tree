@@ -283,8 +283,8 @@ where
     E: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_struct("Error")
-            .field("context", &Quoted(&self.msg))
+        f.debug_struct("Mishap")
+            .field("msg", &Quoted(&self.msg))
             .field("sources", &self.sources)
             .finish()
     }

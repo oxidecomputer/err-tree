@@ -197,16 +197,26 @@ impl fmt::Debug for Mishap {
 impl fmt::Display for Mishap {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match &*self.kind {
-            TreeImpl::Chain(error) => error.fmt(f),
+            TreeImpl::Error(error) => error.fmt(f),
             TreeImpl::Tree(tree) => tree.fmt(f),
         }
     }
 }
 
-#[derive(Debug)]
+impl ErrorTree for Mishap {
+    fn sources(&self) -> Box<dyn Iterator<Item = ErrorTreeSource<'_>> + '_> {
+        match &*self.kind {
+            TreeImpl::Error(error) => {
+                Box::new(error.source().into_iter().map(ErrorTreeSource::Error))
+            }
+            TreeImpl::Tree(tree) => tree.sources(),
+        }
+    }
+}
+
 enum TreeImpl {
     /// A chain of errors as an anyhow::Error.
-    Chain(anyhow::Error),
+    Error(anyhow::Error),
 
     /// An error tree.
     Tree(Box<dyn ErrorTree>),
@@ -214,29 +224,33 @@ enum TreeImpl {
 
 impl TreeImpl {
     fn new_chain(error: anyhow::Error) -> Box<Self> {
-        Box::new(TreeImpl::Chain(error))
+        Box::new(TreeImpl::Error(error))
     }
 
     fn new_tree(tree: impl ErrorTree + 'static) -> Box<Self> {
         Box::new(TreeImpl::Tree(Box::new(tree)))
     }
 
-    fn new_wrapped_tree<D, E>(msg: D, sources: impl IntoIterator<Item = E>) -> Box<Self>
+    fn new_wrapped_tree<D, ET>(msg: D, sources: impl IntoIterator<Item = ET>) -> Box<Self>
     where
         D: fmt::Display + Send + Sync + 'static,
-        E: ErrorTree + 'static,
+        ET: ErrorTree + 'static,
     {
+        let sources: Box<[_]> = sources.into_iter().collect();
+        if sources.is_empty() {
+            // No sources can be simplified to an anyhow error.
+            return TreeImpl::new_chain(anyhow!(msg.to_string()));
+        }
         Box::new(TreeImpl::Tree(Box::new(WrappedTree::new(msg, sources))))
     }
 }
 
-impl ErrorTree for Mishap {
-    fn sources(&self) -> Box<dyn Iterator<Item = ErrorTreeSource<'_>> + '_> {
-        match &*self.kind {
-            TreeImpl::Chain(error) => {
-                Box::new(error.source().into_iter().map(ErrorTreeSource::Error))
-            }
-            TreeImpl::Tree(tree) => tree.sources(),
+impl fmt::Debug for TreeImpl {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            // Don't include the outer Error() and Tree() to reduce nesting.
+            TreeImpl::Error(error) => error.fmt(f),
+            TreeImpl::Tree(tree) => tree.fmt(f),
         }
     }
 }
