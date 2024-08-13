@@ -12,3 +12,4 @@ err-tree = { workspace = true, features = ["anyhow-compat"] }
 
 [dev-dependencies]
 expectorate.workspace = true
+mishap-testdata.workspace = true

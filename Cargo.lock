@@ -71,6 +71,15 @@ dependencies = [
  "anyhow",
  "err-tree",
  "expectorate",
+ "mishap-testdata",
+]
+
+[[package]]
+name = "mishap-testdata"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "mishap",
 ]
 
 [[package]]
