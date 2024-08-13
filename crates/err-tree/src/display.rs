@@ -64,16 +64,14 @@ fn display_tree(f: &mut dyn fmt::Write, tree: &dyn ErrorTree) -> fmt::Result {
 
     writeln!(f, "\n\nCaused by:\n")?;
 
-    let mut indent = IndentWriter::new("  ", f);
-
     if sources.peek().is_none() {
         // * With exactly one source, we can display it as a chain.
-        display_nested_source(&mut indent, first_source, DisplayKind::Single)?;
+        display_nested_source(f, first_source, DisplayKind::Single)?;
     } else {
         // * With more than one source, we need to display it as a tree.
-        display_nested_source(&mut indent, first_source, DisplayKind::Multi)?;
+        display_nested_source(f, first_source, DisplayKind::Multi)?;
         for source in sources {
-            display_nested_source(&mut indent, source, DisplayKind::Multi)?;
+            display_nested_source(f, source, DisplayKind::Multi)?;
         }
     }
 
@@ -144,7 +142,7 @@ fn display_nested_tree(
     } else {
         // * With more than one source, we need to display it as a tree -- this
         //   always adds extra indentation.
-        let mut indent = IndentWriter::new("    ", f);
+        let mut indent = IndentWriter::new("  ", f);
         display_nested_source(&mut indent, first_source, DisplayKind::Multi)?;
         for source in sources {
             display_nested_source(&mut indent, source, DisplayKind::Multi)?;
