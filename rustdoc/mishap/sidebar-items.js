@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["Ok"],"struct":["Mishap"],"trait":["WrapAnyhow","WrapAnyhows","WrapError","WrapErrorTree","WrapErrorTrees","WrapErrors"],"type":["Result"]};
