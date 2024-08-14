@@ -19,7 +19,7 @@ pub trait WrapErrorTree<T, E>: private::Sealed {
     /// Convert the error tree into a [`Mishap`] without attaching another message.
     ///
     /// This is equivalent to `From<E: ErrorTree> for Mishap`.
-    fn wrap_error_tree_relay(self) -> Result<T, Mishap>;
+    fn wrap_error_tree_no_msg(self) -> Result<T, Mishap>;
 }
 
 /// Extension trait for wrapping lists or other iterators of error trees with ad-hoc messages.
@@ -54,7 +54,7 @@ pub trait WrapError<T, E>: private::Sealed {
     /// Convert the error value into a [`Mishap`] without attaching another message.
     ///
     /// This is equivalent to `From<E: Error> for Mishap`.
-    fn wrap_error_relay(self) -> Result<T, Mishap>;
+    fn wrap_error_no_msg(self) -> Result<T, Mishap>;
 }
 
 /// Extension trait for wrapping lists or other iterators of errors with ad-hoc messages.
@@ -110,7 +110,7 @@ where
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|error| Mishap::from_error_and_msg(msg, error))
+        self.map_err(|error| Mishap::from_msg_and_error(msg, error))
     }
 
     fn wrap_error_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -118,10 +118,10 @@ where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|error| Mishap::from_error_and_msg(f(), error))
+        self.map_err(|error| Mishap::from_msg_and_error(f(), error))
     }
 
-    fn wrap_error_relay(self) -> Result<T, Mishap> {
+    fn wrap_error_no_msg(self) -> Result<T, Mishap> {
         self.map_err(Mishap::from_error)
     }
 }
@@ -135,7 +135,7 @@ where
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|sources| Mishap::from_errors_and_msg(msg, sources))
+        self.map_err(|sources| Mishap::from_msg_and_errors(msg, sources))
     }
 
     fn wrap_errors_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -143,7 +143,7 @@ where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|sources| Mishap::from_errors_and_msg(f(), sources))
+        self.map_err(|sources| Mishap::from_msg_and_errors(f(), sources))
     }
 }
 
@@ -155,7 +155,7 @@ where
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|error| Mishap::from_error_tree_and_msg(msg, error))
+        self.map_err(|error| Mishap::from_msg_and_error_tree(msg, error))
     }
 
     fn wrap_error_tree_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -163,10 +163,10 @@ where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|error| Mishap::from_error_tree_and_msg(f(), error))
+        self.map_err(|error| Mishap::from_msg_and_error_tree(f(), error))
     }
 
-    fn wrap_error_tree_relay(self) -> Result<T, Mishap> {
+    fn wrap_error_tree_no_msg(self) -> Result<T, Mishap> {
         self.map_err(Mishap::from_error_tree)
     }
 }
@@ -180,7 +180,7 @@ where
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|error| Mishap::from_error_trees_and_msg(msg, error))
+        self.map_err(|error| Mishap::from_msg_and_error_trees(msg, error))
     }
 
     fn wrap_error_trees_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -188,7 +188,7 @@ where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|error| Mishap::from_error_trees_and_msg(f(), error))
+        self.map_err(|error| Mishap::from_msg_and_error_trees(f(), error))
     }
 }
 
@@ -197,7 +197,7 @@ impl<T> WrapAnyhow<T> for anyhow::Result<T> {
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|error| Mishap::from_anyhow_and_msg(msg, error))
+        self.map_err(|error| Mishap::from_msg_and_anyhow(msg, error))
     }
 
     fn wrap_anyhow_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -205,7 +205,7 @@ impl<T> WrapAnyhow<T> for anyhow::Result<T> {
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|error| Mishap::from_anyhow_and_msg(f(), error))
+        self.map_err(|error| Mishap::from_msg_and_anyhow(f(), error))
     }
 }
 
@@ -217,7 +217,7 @@ where
     where
         D: fmt::Display + Send + Sync + 'static,
     {
-        self.map_err(|error| Mishap::from_anyhows_and_msg(msg, error))
+        self.map_err(|error| Mishap::from_msg_and_anyhows(msg, error))
     }
 
     fn wrap_anyhows_with<D, F>(self, f: F) -> Result<T, Mishap>
@@ -225,7 +225,7 @@ where
         D: fmt::Display + Send + Sync + 'static,
         F: FnOnce() -> D,
     {
-        self.map_err(|error| Mishap::from_anyhows_and_msg(f(), error))
+        self.map_err(|error| Mishap::from_msg_and_anyhows(f(), error))
     }
 }
 

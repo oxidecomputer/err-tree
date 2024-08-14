@@ -36,7 +36,7 @@ impl Mishap {
         }
     }
 
-    pub fn from_anyhow_and_msg<D>(msg: D, error: anyhow::Error) -> Self
+    pub fn from_msg_and_anyhow<D>(msg: D, error: anyhow::Error) -> Self
     where
         D: fmt::Display + Send + Sync + 'static,
     {
@@ -45,7 +45,7 @@ impl Mishap {
         }
     }
 
-    pub fn from_anyhows_and_msg<D, I>(msg: D, sources: I) -> Self
+    pub fn from_msg_and_anyhows<D, I>(msg: D, sources: I) -> Self
     where
         D: fmt::Display + Send + Sync + 'static,
         I: IntoIterator<Item = anyhow::Error>,
@@ -64,7 +64,7 @@ impl Mishap {
         }
     }
 
-    pub fn from_error_and_msg<D, E>(msg: D, error: E) -> Self
+    pub fn from_msg_and_error<D, E>(msg: D, error: E) -> Self
     where
         D: fmt::Display + Send + Sync + 'static,
         E: std::error::Error + Send + Sync + 'static,
@@ -74,7 +74,7 @@ impl Mishap {
         }
     }
 
-    pub fn from_errors_and_msg<D, I, E>(msg: D, sources: I) -> Self
+    pub fn from_msg_and_errors<D, I, E>(msg: D, sources: I) -> Self
     where
         D: fmt::Display + Send + Sync + 'static,
         I: IntoIterator<Item = E>,
@@ -94,7 +94,7 @@ impl Mishap {
         }
     }
 
-    pub fn from_error_tree_and_msg<D, ET>(msg: D, tree: ET) -> Self
+    pub fn from_msg_and_error_tree<D, ET>(msg: D, tree: ET) -> Self
     where
         D: fmt::Display + Send + Sync + 'static,
         ET: ErrorTree + 'static,
@@ -104,7 +104,7 @@ impl Mishap {
         }
     }
 
-    pub fn from_error_trees_and_msg<D, I, ET>(msg: D, sources: I) -> Self
+    pub fn from_msg_and_error_trees<D, I, ET>(msg: D, sources: I) -> Self
     where
         D: fmt::Display + Send + Sync + 'static,
         I: IntoIterator<Item = ET>,
@@ -152,7 +152,9 @@ impl Mishap {
         }
     }
 
-    // The Vec represents a chain of causes rather than siblings.
+    /// Create a tree from a message and a chain of causes.
+    ///
+    /// The iterator represents a chain of causes rather than siblings.
     pub fn from_msg_and_cause_chain<I, D>(msg: D, cause_chain: I) -> Self
     where
         I: DoubleEndedIterator<Item = D>,
